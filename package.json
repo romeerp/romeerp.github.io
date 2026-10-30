@@ -1,0 +1,7 @@
+{
+  "name": "romeerp-github-io",
+  "private": true,
+  "type": "module",
+  "scripts": {"build": "node scripts/build.mjs", "check": "node scripts/check.mjs"},
+  "dependencies": {"marked": "15.0.12", "katex": "0.16.22"}
+}
