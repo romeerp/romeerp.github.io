@@ -18,7 +18,7 @@ fs.cpSync('node_modules/katex/dist/fonts', 'docs/assets/fonts', {recursive:true}
 fs.copyFileSync('node_modules/katex/LICENSE', 'docs/assets/KATEX-LICENSE.txt');
 
 const header = `<a class="skip" href="#main">Skip to content</a>
-<header class="site-header"><a class="wordmark" href="/"><span class="monogram" aria-hidden="true">rp</span><span>Romeer Pillay</span></a>
+<header class="site-header"><a class="wordmark" href="/">Romeer Pillay</a>
 <nav aria-label="Main navigation"><a href="/#writing">Writing</a><a href="https://github.com/romeerp">GitHub <span aria-hidden="true">↗</span></a><a href="/feed.xml">RSS</a></nav></header>`;
 const footer = `<footer class="site-footer"><span>Romeer Pillay</span><a href="#top">Back to top ↑</a></footer>`;
 
@@ -31,9 +31,9 @@ function shell({title,description,url='/',body,kind='website',math=false,script=
 <meta name="twitter:card" content="summary"><link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="alternate" type="application/rss+xml" title="Romeer Pillay" href="/feed.xml">
 <link rel="stylesheet" href="/style.css">${math ? '<link rel="stylesheet" href="/assets/katex.min.css">' : ''}${script ? '<script defer src="/caseops.js"></script>' : ''}${visuals ? '<script defer src="/figures.js"></script>' : ''}</head><body id="top">${header}${body}${footer}</body></html>`;
 }
-const index = `<main id="main" class="home"><section class="intro"><h1>I'm Romeer<span class="title-dot">.</span></h1><p class="intro-copy">I'm a junior at UT Austin, interested in a variety of topics across deep learning and language modeling.</p></section>
-<section class="writing" id="writing" aria-labelledby="writing-title"><div class="section-label"><h2 id="writing-title">Writing</h2><span class="section-rule" aria-hidden="true"></span></div>
-${posts.map(p=>`<article class="post-row"><div class="post-meta"><time datetime="${p.date}">${date(p)}</time><span>${minutes(p)} min read</span></div><div class="post-copy"><h3><a href="/${p.slug}/">${escape(p.title)}<span class="row-arrow" aria-hidden="true">↗</span></a></h3><p>${escape(p.description)}</p></div></article>`).join('')}
+const index = `<main id="main" class="home"><section class="intro"><h1>Hi, I'm Romeer.</h1><p class="intro-copy">I'm a junior at UT Austin, interested in a variety of topics across deep learning and language modeling.</p></section>
+<section class="writing" id="writing" aria-labelledby="writing-title"><div class="section-label"><h2 id="writing-title">Writing</h2></div>
+${posts.map(p=>`<article class="post-row"><div class="post-meta"><time datetime="${p.date}">${date(p)}</time></div><div class="post-copy"><h3><a href="/${p.slug}/">${escape(p.title)}</a></h3><p>${escape(p.description)}</p></div></article>`).join('')}
 </section></main>`;
 fs.writeFileSync('docs/index.html', shell({title:'Romeer Pillay',description:'Romeer Pillay, a junior at UT Austin interested in deep learning and language modeling.',body:index}));
 
@@ -63,7 +63,7 @@ for (const post of posts) {
   for (const [name, figure] of Object.entries({...dimuonFigures,sandwich:animated.sandwich,splitk:animated.splitk})) content=content.replace('<!--DIMUON_'+name.toUpperCase()+'-->',figure);
   const next=posts.find(x=>x.slug!==post.slug);
   const body=`<main id="main" class="article-main"><a class="back-link" href="/#writing">← All writing</a><article>
-<header class="article-header"><p class="eyebrow">${escape(post.category)}</p><h1>${escape(post.title)}</h1><p class="dek">${escape(post.description)}</p><div class="article-meta"><span>Romeer Pillay</span><span aria-hidden="true">·</span><time datetime="${post.date}">${date(post)}</time><span aria-hidden="true">·</span><span>${minutes(post)} min read</span></div></header>
+<header class="article-header"><p class="eyebrow">${escape(post.category)}</p><h1>${escape(post.title)}</h1><p class="dek">${escape(post.description)}</p><div class="article-meta"><time datetime="${post.date}">${date(post)}</time><span aria-hidden="true">·</span><span>${minutes(post)} min read</span></div></header>
 <details class="contents"><summary>On this page</summary><nav aria-label="Article contents"><ol>${toc.map(t=>`<li><a href="#${t.id}">${t.label}</a></li>`).join('')}</ol></nav></details>
 <div class="prose">${content}</div></article>
 ${next ? `<aside class="next-post" aria-label="More writing"><p class="eyebrow">More writing</p><a href="/${next.slug}/">${escape(next.title)} <span aria-hidden="true">→</span></a></aside>` : ''}</main>`;
