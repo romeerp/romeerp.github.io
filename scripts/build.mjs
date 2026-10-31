@@ -3,6 +3,7 @@ import path from 'node:path';
 import { Marked } from 'marked';
 import katex from 'katex';
 import * as dimuonFigures from './figures/dimuon.mjs';
+import * as animated from './figures/animated.mjs';
 
 const origin = 'https://romeerp.github.io';
 const posts = JSON.parse(fs.readFileSync('content/posts.json', 'utf8')).sort((a,b)=>b.date.localeCompare(a.date));
@@ -21,14 +22,14 @@ const header = `<a class="skip" href="#main">Skip to content</a>
 <nav aria-label="Main navigation"><a href="/#writing">Writing</a><a href="https://github.com/romeerp">GitHub <span aria-hidden="true">↗</span></a><a href="/feed.xml">RSS</a></nav></header>`;
 const footer = `<footer class="site-footer"><span>Romeer Pillay</span><a href="#top">Back to top ↑</a></footer>`;
 
-function shell({title,description,url='/',body,kind='website',math=false,script=false,dimuon=false}){
+function shell({title,description,url='/',body,kind='website',math=false,script=false,visuals=false}){
   const canonical = origin + url;
   return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="color-scheme" content="dark">
 <title>${escape(title)}${title === 'Romeer Pillay' ? '' : ' — Romeer Pillay'}</title>
 <meta name="description" content="${escape(description)}"><link rel="canonical" href="${canonical}">
 <meta property="og:type" content="${kind}"><meta property="og:title" content="${escape(title)}"><meta property="og:description" content="${escape(description)}"><meta property="og:url" content="${canonical}"><meta property="og:site_name" content="Romeer Pillay">
 <meta name="twitter:card" content="summary"><link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="alternate" type="application/rss+xml" title="Romeer Pillay" href="/feed.xml">
-<link rel="stylesheet" href="/style.css">${math ? '<link rel="stylesheet" href="/assets/katex.min.css">' : ''}${script ? '<script defer src="/caseops.js"></script>' : ''}${dimuon ? '<script defer src="/dimuon.js"></script>' : ''}</head><body id="top">${header}${body}${footer}</body></html>`;
+<link rel="stylesheet" href="/style.css">${math ? '<link rel="stylesheet" href="/assets/katex.min.css">' : ''}${script ? '<script defer src="/caseops.js"></script>' : ''}${visuals ? '<script defer src="/figures.js"></script>' : ''}</head><body id="top">${header}${body}${footer}</body></html>`;
 }
 const index = `<main id="main" class="home"><section class="intro"><h1>I'm Romeer<span class="title-dot">.</span></h1><p class="intro-copy">I'm a junior at UT Austin, interested in a variety of topics across deep learning and language modeling.</p></section>
 <section class="writing" id="writing" aria-labelledby="writing-title"><div class="section-label"><h2 id="writing-title">Writing</h2><span class="section-rule" aria-hidden="true"></span></div>
@@ -40,7 +41,7 @@ const demo = `<figure class="case-demo" aria-labelledby="case-demo-title"><figca
 <label for="case-input">Original text</label><input id="case-input" type="text" value="The NASA Launch" maxlength="200" autocomplete="off" spellcheck="false">
 <div class="example-buttons" aria-label="Example text"><button type="button" data-example="The NASA Launch">Title & all caps</button><button type="button" data-example="iPhone OpenAI">Mixed case</button><button type="button" data-example="Hello, café!">With punctuation</button></div>
 <p class="demo-label">CaseOps representation</p><output id="case-output" aria-live="polite"></output><p class="demo-label">Decoded back</p><output id="case-decoded"></output><p class="demo-foot">Same text. Shared lowercase pieces. Capitalization travels as operators.</p></figure>`;
-const ttt = `<figure class="ttt-diagram"><figcaption>One global update between two stretches of scoring</figcaption><ol><li><span class="step">01</span><strong>Score the prefix</strong><span>Local LoRA adapts within each document.</span></li><li><span class="step">02</span><strong>Update the base</strong><span>Global SGD uses only completed, already-scored documents.</span></li><li><span class="step">03</span><strong>Keep scoring</strong><span>Later documents start with the updated base.</span></li></ol><p>Earlier scores stay fixed throughout.</p></figure>`;
+
 
 for (const post of posts) {
   const toc=[];const used=new Map();
@@ -58,8 +59,8 @@ for (const post of posts) {
       return `<h${depth} id="${id}">${inner}<a class="heading-link" href="#${id}" aria-label="Link to ${escape(label)}">#</a></h${depth}>`;
     }
   }});
-  let content=md.parse(post.markdown).replace('<!--CASEOPS_DEMO-->',demo).replace('<!--TTT_DIAGRAM-->',ttt);
-  for (const [name, figure] of Object.entries(dimuonFigures)) content=content.replace('<!--DIMUON_'+name.toUpperCase()+'-->',figure);
+  let content=md.parse(post.markdown).replace('<!--CASEOPS_DEMO-->',demo).replace('<!--TTT_DIAGRAM-->',animated.ttt).replace('<!--CASEOPS_SHARING-->',animated.caseops);
+  for (const [name, figure] of Object.entries({...dimuonFigures,sandwich:animated.sandwich,splitk:animated.splitk})) content=content.replace('<!--DIMUON_'+name.toUpperCase()+'-->',figure);
   const next=posts.find(x=>x.slug!==post.slug);
   const body=`<main id="main" class="article-main"><a class="back-link" href="/#writing">← All writing</a><article>
 <header class="article-header"><p class="eyebrow">${escape(post.category)}</p><h1>${escape(post.title)}</h1><p class="dek">${escape(post.description)}</p><div class="article-meta"><span>Romeer Pillay</span><span aria-hidden="true">·</span><time datetime="${post.date}">${date(post)}</time><span aria-hidden="true">·</span><span>${minutes(post)} min read</span></div></header>
@@ -67,7 +68,7 @@ for (const post of posts) {
 <div class="prose">${content}</div></article>
 ${next ? `<aside class="next-post" aria-label="More writing"><p class="eyebrow">More writing</p><a href="/${next.slug}/">${escape(next.title)} <span aria-hidden="true">→</span></a></aside>` : ''}</main>`;
   fs.mkdirSync(path.join('docs',post.slug),{recursive:true});
-  fs.writeFileSync(path.join('docs',post.slug,'index.html'),shell({title:post.title,description:post.description,url:`/${post.slug}/`,body,kind:'article',math:true,script:post.slug==='parameter-golf'}));
+  fs.writeFileSync(path.join('docs',post.slug,'index.html'),shell({title:post.title,description:post.description,url:`/${post.slug}/`,body,kind:'article',math:true,script:post.slug==='parameter-golf',visuals:true}));
   if (post.notes) {
     const title = 'DiMuon: equations and experiment details';
     const notesBody = `<main id="main" class="article-main"><a class="back-link" href="/${post.slug}/">← Back to the article</a><article><header class="article-header"><p class="eyebrow">Companion notes</p><h1>${title}</h1></header><div class="prose">${md.parse(post.notes)}</div></article></main>`;
