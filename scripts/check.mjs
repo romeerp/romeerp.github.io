@@ -7,7 +7,7 @@ const pages=['index.html','404.html',...posts.map(p=>p.slug+'/index.html')];
 for(const file of pages){
  const html=fs.readFileSync(path.join('docs',file),'utf8');
  assert.equal((html.match(/<h1[ >]/g)||[]).length,1,file+' has one h1');
- assert(!/CASEOPS_DEMO|TTT_DIAGRAM|katex-error/.test(html),file+' fully rendered');
+ assert(!/CASEOPS_DEMO|TTT_DIAGRAM|DIMUON_[A-Z]+|katex-error/.test(html),file+' fully rendered');
  for(const m of html.matchAll(/(?:href|src)="([^"]+)"/g)){
   const ref=m[1];if(!ref.startsWith('/')&&!ref.startsWith('#'))continue;
   const [pathname,hash]=ref.split('#');
