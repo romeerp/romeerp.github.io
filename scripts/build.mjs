@@ -67,11 +67,17 @@ for (const post of posts) {
 <div class="prose">${content}</div></article>
 ${next ? `<aside class="next-post" aria-label="More writing"><p class="eyebrow">More writing</p><a href="/${next.slug}/">${escape(next.title)} <span aria-hidden="true">→</span></a></aside>` : ''}</main>`;
   fs.mkdirSync(path.join('docs',post.slug),{recursive:true});
-  fs.writeFileSync(path.join('docs',post.slug,'index.html'),shell({title:post.title,description:post.description,url:`/${post.slug}/`,body,kind:'article',math:true,script:post.slug==='parameter-golf',dimuon:post.slug==='reverse-engineering-dimuon'}));
+  fs.writeFileSync(path.join('docs',post.slug,'index.html'),shell({title:post.title,description:post.description,url:`/${post.slug}/`,body,kind:'article',math:true,script:post.slug==='parameter-golf'}));
+  if (post.notes) {
+    const title = 'DiMuon: equations and experiment details';
+    const notesBody = `<main id="main" class="article-main"><a class="back-link" href="/${post.slug}/">← Back to the article</a><article><header class="article-header"><p class="eyebrow">Companion notes</p><h1>${title}</h1></header><div class="prose">${md.parse(post.notes)}</div></article></main>`;
+    fs.mkdirSync(path.join('docs',post.slug,'notes'),{recursive:true});
+    fs.writeFileSync(path.join('docs',post.slug,'notes','index.html'),shell({title,description:'The equations and measurement details behind the DiMuon reconstruction.',url:`/${post.slug}/notes/`,body:notesBody,kind:'article',math:true}));
+  }
 }
 fs.writeFileSync('docs/404.html',shell({title:'Page not found',description:'This page has wandered off.',body:'<main id="main" class="home"><section class="intro"><p class="eyebrow">404</p><h1>Nothing here.</h1><p>Head back to the posts.</p><a href="/">← Back to the writing</a></section></main>'}));
 fs.writeFileSync('docs/feed.xml',`<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"><channel><title>Romeer Pillay</title><link>${origin}/</link><description>Writing on deep learning and language modeling.</description><language>en</language>${posts.map(p=>`<item><title>${escape(p.title)}</title><link>${origin}/${p.slug}/</link><guid>${origin}/${p.slug}/</guid><description>${escape(p.description)}</description><pubDate>${new Date(p.date+'T12:00:00Z').toUTCString()}</pubDate></item>`).join('')}</channel></rss>`);
-fs.writeFileSync('docs/sitemap.xml',`<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${['/',...posts.map(p=>'/'+p.slug+'/')].map(u=>`<url><loc>${origin}${u}</loc></url>`).join('')}</urlset>`);
+fs.writeFileSync('docs/sitemap.xml',`<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${['/',...posts.map(p=>'/'+p.slug+'/'),...posts.filter(p=>p.notes).map(p=>'/'+p.slug+'/notes/')].map(u=>`<url><loc>${origin}${u}</loc></url>`).join('')}</urlset>`);
 fs.writeFileSync('docs/robots.txt',`User-agent: *\nAllow: /\nSitemap: ${origin}/sitemap.xml\n`);
 console.log(`Built ${posts.length} posts, index, RSS, sitemap, and 404.`);
 

@@ -95,4 +95,14 @@ body { -webkit-font-smoothing: antialiased; }
 @media(prefers-reduced-motion:reduce){.bar-track>span{transition:none}}
 @media print{.research-figure{background:#f5f7fa;color:#17212e;break-inside:avoid}.figure-number,.figure-foot,.figure-intro,.stage-explanation{color:#33435b!important}.equation-details{display:block}.optimizer-steps{display:none}}
 .rounding-values{display:flex;justify-content:space-between;gap:14px;margin:0 8.5%;font:12px/1.8 ui-monospace,SFMono-Regular,monospace;color:#dbe4f2}
+.sandwich-flow{display:grid;grid-template-columns:1fr 20px 1fr 20px 1fr;gap:10px;align-items:center}
+.sandwich-flow>div{align-self:stretch;display:flex;flex-direction:column;gap:10px;padding:17px 13px;border:1px solid #42516a;border-radius:7px;background:#202c3d}
+.sandwich-flow>div>strong{font-size:16px;font-weight:500}.sandwich-flow>div>span:last-child{font-size:12px;color:#b6c3d7}
+.flow-index{font:11px ui-monospace,monospace;color:#a6c5f2}.flow-arrow{text-align:center;color:#9eb6da;font-size:20px}
+.sandwich-flow .polar-step{background:#253a37;border-color:#41665e}.polar-step .flow-index{color:#9ad3bd}
+.flow-finish{margin:20px 0 0;text-align:center;font-size:12px;color:#b6c3d7}
+.polynomial-form{padding:14px 16px;border:1px solid #354257;border-radius:7px;background:#1c2431;margin-top:12px}
+.polynomial-form>span{font:11px ui-monospace,monospace;color:#b4c2d7}.polynomial-form .math-block{margin:5px 0 0;padding:0;font-size:16px}
+.horner-form{border-color:#44665e;background:#1c2d2a}.horner-form>span{color:#9ad3bd}
+@media(max-width:650px){.sandwich-flow{grid-template-columns:1fr;gap:8px}.sandwich-flow>div{display:grid;grid-template-columns:25px 1fr;gap:5px 10px;padding:13px 15px}.sandwich-flow .flow-index{grid-row:span 2;padding-top:5px}.sandwich-flow>div>strong{font-size:15px}.sandwich-flow .flow-arrow{line-height:1;transform:rotate(90deg)}.polynomial-form{padding:12px}.polynomial-form .math-block{font-size:13px}}
 @media(max-width:400px){.lora-route{display:grid;grid-template-columns:1fr;gap:16px}.route-end{flex-direction:row;justify-content:center}.lora-branches{width:100%}.rounding-values{margin:0;font-size:11px}}

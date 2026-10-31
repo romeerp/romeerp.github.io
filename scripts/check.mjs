@@ -3,7 +3,7 @@ import path from 'node:path';
 import assert from 'node:assert/strict';
 import vm from 'node:vm';
 const posts=JSON.parse(fs.readFileSync('content/posts.json','utf8'));
-const pages=['index.html','404.html',...posts.map(p=>p.slug+'/index.html')];
+const pages=['index.html','404.html',...posts.map(p=>p.slug+'/index.html'),...posts.filter(p=>p.notes).map(p=>p.slug+'/notes/index.html')];
 for(const file of pages){
  const html=fs.readFileSync(path.join('docs',file),'utf8');
  assert.equal((html.match(/<h1[ >]/g)||[]).length,1,file+' has one h1');
