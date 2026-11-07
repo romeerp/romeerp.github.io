@@ -3,6 +3,7 @@ import path from 'node:path';
 import { Marked } from 'marked';
 import katex from 'katex';
 import * as dimuonFigures from './figures/dimuon.mjs';
+import { attention, vote } from './figures/nanogpt.mjs';
 import * as animated from './figures/animated.mjs';
 
 const origin = 'https://romeerp.github.io';
@@ -59,7 +60,7 @@ for (const post of posts) {
       return `<h${depth} id="${id}">${inner}<a class="heading-link" href="#${id}" aria-label="Link to ${escape(label)}">#</a></h${depth}>`;
     }
   }});
-  let content=md.parse(post.markdown).replace('<!--CASEOPS_DEMO-->',demo).replace('<!--TTT_DIAGRAM-->',animated.ttt).replace('<!--CASEOPS_SHARING-->',animated.caseops);
+  let content=md.parse(post.markdown).replace('<!--NANO_ATTENTION-->',attention).replace('<!--NANO_VOTE-->',vote).replace('<!--CASEOPS_DEMO-->',demo).replace('<!--TTT_DIAGRAM-->',animated.ttt).replace('<!--CASEOPS_SHARING-->',animated.caseops);
   for (const [name, figure] of Object.entries({...dimuonFigures,sandwich:animated.sandwich,splitk:animated.splitk})) content=content.replace('<!--DIMUON_'+name.toUpperCase()+'-->',figure);
   const next=posts.find(x=>x.slug!==post.slug);
   const body=`<main id="main" class="article-main"><a class="back-link" href="/#writing">← All writing</a><article>

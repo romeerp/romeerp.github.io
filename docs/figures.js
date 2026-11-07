@@ -54,3 +54,22 @@
   document.addEventListener('visibilitychange',()=>{if(document.hidden)stop();});
   new IntersectionObserver(entries=>{if(!entries[0].isIntersecting)stop();}).observe(figure);
 })();
+
+(() => {
+  const figure = document.querySelector('[data-nano-vote]');
+  if (!figure) return;
+  const slider = figure.querySelector('input');
+  const render = () => {
+    const n = Number(slider.value);
+    const pct = (100 * (n + 2.694 * 0.20) / (n + 2.694)).toFixed(1) + '%';
+    figure.querySelector('output').value = n;
+    figure.querySelector('[data-prob]').textContent = pct;
+    figure.querySelector('[data-fill]').style.width = pct;
+    figure.querySelector('.figure-foot').textContent = n === 0
+      ? 'No matches: the incoming probability stays at 20%.'
+      : 'With k = 2.694, the probability is (' + n + ' + 2.694 × 0.20) / (' + n + ' + 2.694) ≈ ' + pct + '.';
+  };
+  slider.addEventListener('input', render);
+  render();
+  figure.querySelector('label').hidden = false;
+})();

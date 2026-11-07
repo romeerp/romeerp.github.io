@@ -179,3 +179,16 @@ a:focus-visible, button:focus-visible, input:focus-visible, summary:focus-visibl
 @media(max-width:390px){.sharing-figure .word-variant{font-size:25px}.ttt-scene .scene-label{font-size:20px;letter-spacing:0}.ttt-scene .scene-note{font-size:21px}.ttt-scene .rail-label{font-size:19px}.ttt-scene .return-label{font-size:23px}.ttt-controls{gap:14px}.ttt-controls button{font-size:10px}}
 @media(prefers-reduced-motion:reduce){.ttt-scene *{animation:none!important;transition:none!important}.ttt-scene .flying-paper{display:none}.ttt-scene .just-arrived{opacity:1}}
 @media print{.ttt-controls{display:none}.ttt-scene *{animation:none!important}.ttt-scene{break-inside:avoid}}
+
+.nano-figure{border-block:1px solid #44564f;padding:20px 0;color:#c4d0cc}
+.nano-figure figcaption>strong{font:400 24px/1.35 Georgia,serif}
+.nano-matrices{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8%;max-width:520px;margin:auto}
+.nano-matrices span,.nano-matrices small{display:block;font:12px/1.6 ui-monospace,monospace;color:#c1cec9}
+.nano-matrices svg{display:block;width:100%;margin:12px 0}
+.nano-vote{border-color:#65543e}
+.nano-vote figcaption>strong{color:#ead7bf}
+.nano-vote>p:not(.figure-foot){font-size:15px}
+.nano-bar,.nano-slider:not([hidden]){display:grid;grid-template-columns:1fr auto;gap:5px 10px;margin:13px 0;font:13px/1.5 ui-monospace,monospace}
+.nano-bar i,.nano-slider input{grid-column:1/-1;width:100%}
+.nano-bar i{height:12px;background:#29313a}.nano-bar em{display:block;height:100%;background:#9ab7d3}
+.nano-after em{background:#dfb67d}.nano-slider input{accent-color:#dfb67d;margin:4px 0}
