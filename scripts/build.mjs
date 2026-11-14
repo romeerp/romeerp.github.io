@@ -79,6 +79,12 @@ ${next ? `<aside class="next-post" aria-label="More writing"><p class="eyebrow">
     fs.writeFileSync(path.join('docs',post.slug,'notes','index.html'),shell({title,description:'The equations and measurement details behind the DiMuon reconstruction.',url:`/${post.slug}/notes/`,body:notesBody,kind:'article',math:true}));
   }
 }
+// Old URLs of renamed posts: a tiny page that forwards to the new address.
+for (const post of posts) for (const from of post.redirect_from || []) {
+  const to = `/${post.slug}/`;
+  fs.mkdirSync(path.join('docs', from), {recursive:true});
+  fs.writeFileSync(path.join('docs', from, 'index.html'), `<!doctype html><html lang="en"><head><meta charset="utf-8"><title>${escape(post.title)}</title><link rel="canonical" href="${origin}${to}"><meta http-equiv="refresh" content="0; url=${to}"><meta name="robots" content="noindex"></head><body><p>This post has moved to <a href="${to}">${escape(post.title)}</a>.</p></body></html>`);
+}
 fs.writeFileSync('docs/404.html',shell({title:'Page not found',description:'This page has wandered off.',body:'<main id="main" class="home"><section class="intro"><p class="eyebrow">404</p><h1>Nothing here.</h1><p>Head back to the posts.</p><a href="/">← Back to the writing</a></section></main>'}));
 fs.writeFileSync('docs/feed.xml',`<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"><channel><title>Romeer Pillay</title><link>${origin}/</link><description>Writing on deep learning and language modeling.</description><language>en</language>${posts.map(p=>`<item><title>${escape(p.title)}</title><link>${origin}/${p.slug}/</link><guid>${origin}/${p.slug}/</guid><description>${escape(p.description)}</description><pubDate>${new Date(p.date+'T12:00:00Z').toUTCString()}</pubDate></item>`).join('')}</channel></rss>`);
 fs.writeFileSync('docs/sitemap.xml',`<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${['/',...posts.map(p=>'/'+p.slug+'/'),...posts.filter(p=>p.notes).map(p=>'/'+p.slug+'/notes/')].map(u=>`<url><loc>${origin}${u}</loc></url>`).join('')}</urlset>`);
