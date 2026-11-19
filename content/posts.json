@@ -18,7 +18,7 @@
   },
   {
     "slug": "nanogpt-attention-and-table-votes",
-    "title": "Two NanoGPT experiments: attention gradients and table votes",
+    "title": "Two NanoGPT records: attention gradients and table votes",
     "description": "Skipping some attention backward work, and letting an n-gram table vote on the answer.",
     "date": "2026-11-07",
     "category": "Language modeling · Experiments",
